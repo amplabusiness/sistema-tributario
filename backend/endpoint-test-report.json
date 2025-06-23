@@ -1,0 +1,333 @@
+{
+  "summary": {
+    "totalTests": 11,
+    "passedTests": 11,
+    "failedTests": 0,
+    "successRate": "100.00",
+    "totalTime": 1952,
+    "averageResponseTime": 177.0909090909091,
+    "timestamp": "2025-06-23T02:25:41.369Z"
+  },
+  "tests": [
+    {
+      "name": "Health Check",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/health",
+      "status": 200,
+      "success": true,
+      "responseTime": 180,
+      "testTime": 180,
+      "data": {
+        "status": "healthy",
+        "timestamp": "2025-06-23T02:25:39.302Z",
+        "uptime": 170.493635284,
+        "version": "1.0.0",
+        "message": "Sistema Tributário funcionando!"
+      },
+      "timestamp": "2025-06-23T02:25:39.597Z"
+    },
+    {
+      "name": "API Status",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/status",
+      "status": 200,
+      "success": true,
+      "responseTime": 184,
+      "testTime": 184,
+      "data": {
+        "success": true,
+        "message": "API funcionando corretamente",
+        "timestamp": "2025-06-23T02:25:39.491Z",
+        "environment": "production"
+      },
+      "timestamp": "2025-06-23T02:25:39.781Z"
+    },
+    {
+      "name": "Root Endpoint",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/",
+      "status": 200,
+      "success": true,
+      "responseTime": 172,
+      "testTime": 172,
+      "data": {
+        "success": true,
+        "message": "Sistema Tributário 100% IA - Backend API",
+        "version": "1.0.0",
+        "timestamp": "2025-06-23T02:25:39.664Z",
+        "endpoints": {
+          "health": "/health",
+          "status": "/api/status",
+          "upload": "/api/upload",
+          "documents": "/api/documents",
+          "icmsAnalyze": "/api/icms/analyze",
+          "federalAnalyze": "/api/federal/analyze"
+        }
+      },
+      "timestamp": "2025-06-23T02:25:39.953Z"
+    },
+    {
+      "name": "List Documents",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/documents",
+      "status": 200,
+      "success": true,
+      "responseTime": 184,
+      "testTime": 184,
+      "data": {
+        "success": true,
+        "data": [
+          {
+            "id": "1",
+            "fileName": "AVIZ-ICMS-04-2025.txt",
+            "fileType": "AVIZ",
+            "empresaId": "empresa-1",
+            "status": "processed",
+            "processedAt": "2025-01-15T10:30:00Z",
+            "summary": {
+              "totalItems": 1250,
+              "documentType": "AVIZ",
+              "processingTime": 450
+            }
+          },
+          {
+            "id": "2",
+            "fileName": "SPED-FISCAL-04-2025.txt",
+            "fileType": "SPED",
+            "empresaId": "empresa-1",
+            "status": "processed",
+            "processedAt": "2025-01-15T11:15:00Z",
+            "summary": {
+              "totalItems": 890,
+              "documentType": "SPED",
+              "processingTime": 320
+            }
+          }
+        ]
+      },
+      "timestamp": "2025-06-23T02:25:40.137Z"
+    },
+    {
+      "name": "Upload File (Valid)",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/upload",
+      "status": 200,
+      "success": true,
+      "responseTime": 178,
+      "testTime": 179,
+      "data": {
+        "success": true,
+        "message": "Arquivo processado com sucesso!",
+        "data": {
+          "id": "1750645540018",
+          "fileName": "test-aviz.txt",
+          "fileType": "AVIZ",
+          "empresaId": "test-empresa-1",
+          "status": "processed",
+          "processedAt": "2025-06-23T02:25:40.018Z",
+          "summary": {
+            "totalItems": 26,
+            "documentType": "AVIZ",
+            "processingTime": 382.69670162460636
+          }
+        }
+      },
+      "timestamp": "2025-06-23T02:25:40.316Z"
+    },
+    {
+      "name": "Upload File (Invalid - Missing Fields)",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/upload",
+      "status": 400,
+      "success": true,
+      "responseTime": 169,
+      "testTime": 169,
+      "data": {
+        "success": false,
+        "error": "Dados obrigatórios: fileName, fileType, content"
+      },
+      "timestamp": "2025-06-23T02:25:40.485Z"
+    },
+    {
+      "name": "ICMS Analysis (Valid)",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/icms/analyze",
+      "status": 200,
+      "success": true,
+      "responseTime": 178,
+      "testTime": 179,
+      "data": {
+        "success": true,
+        "message": "Análise ICMS concluída!",
+        "data": {
+          "empresaId": "empresa-1",
+          "periodo": "04/2025",
+          "resultado": {
+            "totalICMS": 125000.5,
+            "totalProtege": 25000,
+            "totalDIFAL": 15000,
+            "totalBaseReduzida": 8000,
+            "totalCreditoOutorgado": 12000,
+            "status": "aprovado"
+          },
+          "detalhes": [
+            {
+              "produto": "Produto A",
+              "ncm": "12345678",
+              "icms": 15000,
+              "protege": 3000,
+              "difal": 1800
+            },
+            {
+              "produto": "Produto B",
+              "ncm": "87654321",
+              "icms": 20000,
+              "protege": 4000,
+              "difal": 2400
+            }
+          ],
+          "processadoEm": "2025-06-23T02:25:40.368Z"
+        }
+      },
+      "timestamp": "2025-06-23T02:25:40.664Z"
+    },
+    {
+      "name": "ICMS Analysis (Default Values)",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/icms/analyze",
+      "status": 200,
+      "success": true,
+      "responseTime": 172,
+      "testTime": 173,
+      "data": {
+        "success": true,
+        "message": "Análise ICMS concluída!",
+        "data": {
+          "empresaId": "default",
+          "periodo": "04/2025",
+          "resultado": {
+            "totalICMS": 125000.5,
+            "totalProtege": 25000,
+            "totalDIFAL": 15000,
+            "totalBaseReduzida": 8000,
+            "totalCreditoOutorgado": 12000,
+            "status": "aprovado"
+          },
+          "detalhes": [
+            {
+              "produto": "Produto A",
+              "ncm": "12345678",
+              "icms": 15000,
+              "protege": 3000,
+              "difal": 1800
+            },
+            {
+              "produto": "Produto B",
+              "ncm": "87654321",
+              "icms": 20000,
+              "protege": 4000,
+              "difal": 2400
+            }
+          ],
+          "processadoEm": "2025-06-23T02:25:40.547Z"
+        }
+      },
+      "timestamp": "2025-06-23T02:25:40.837Z"
+    },
+    {
+      "name": "Federal Analysis (Valid)",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/federal/analyze",
+      "status": 200,
+      "success": true,
+      "responseTime": 176,
+      "testTime": 176,
+      "data": {
+        "success": true,
+        "message": "Análise Federal concluída!",
+        "data": {
+          "empresaId": "empresa-1",
+          "periodo": "04/2025",
+          "resultado": {
+            "totalPIS": 8500,
+            "totalCOFINS": 39200,
+            "totalIRPJ": 25000,
+            "totalCSLL": 9000,
+            "status": "aprovado"
+          },
+          "detalhes": [
+            {
+              "produto": "Produto A",
+              "pis": 1200,
+              "cofins": 5520,
+              "irpj": 3500,
+              "csll": 1260
+            },
+            {
+              "produto": "Produto B",
+              "pis": 1500,
+              "cofins": 6900,
+              "irpj": 4500,
+              "csll": 1620
+            }
+          ],
+          "processadoEm": "2025-06-23T02:25:40.722Z"
+        }
+      },
+      "timestamp": "2025-06-23T02:25:41.013Z"
+    },
+    {
+      "name": "Federal Analysis (Default Values)",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/federal/analyze",
+      "status": 200,
+      "success": true,
+      "responseTime": 169,
+      "testTime": 170,
+      "data": {
+        "success": true,
+        "message": "Análise Federal concluída!",
+        "data": {
+          "empresaId": "default",
+          "periodo": "04/2025",
+          "resultado": {
+            "totalPIS": 8500,
+            "totalCOFINS": 39200,
+            "totalIRPJ": 25000,
+            "totalCSLL": 9000,
+            "status": "aprovado"
+          },
+          "detalhes": [
+            {
+              "produto": "Produto A",
+              "pis": 1200,
+              "cofins": 5520,
+              "irpj": 3500,
+              "csll": 1260
+            },
+            {
+              "produto": "Produto B",
+              "pis": 1500,
+              "cofins": 6900,
+              "irpj": 4500,
+              "csll": 1620
+            }
+          ],
+          "processadoEm": "2025-06-23T02:25:40.896Z"
+        }
+      },
+      "timestamp": "2025-06-23T02:25:41.183Z"
+    },
+    {
+      "name": "404 Not Found",
+      "url": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app/api/nonexistent",
+      "status": 404,
+      "success": true,
+      "responseTime": 186,
+      "testTime": 186,
+      "data": {
+        "success": false,
+        "error": "Rota não encontrada",
+        "path": "/api/nonexistent"
+      },
+      "timestamp": "2025-06-23T02:25:41.369Z"
+    }
+  ],
+  "config": {
+    "baseUrl": "https://backend-sergio-2143-sergio-carneiro-leaos-projects.vercel.app",
+    "timeout": 10000,
+    "retries": 3,
+    "outputFile": "endpoint-test-report.json",
+    "verbose": false
+  }
+}
