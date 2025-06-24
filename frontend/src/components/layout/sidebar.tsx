@@ -108,8 +108,7 @@ export function Sidebar() {
               <span className="ml-2 text-lg font-semibold">Sistema IA</span>
             </div>
             <Button
-              variant="ghost"
-              size="sm"
+              className="hover:bg-gray-100 p-2 rounded"
               onClick={() => setSidebarOpen(false)}
             >
               <X className="w-5 h-5" />
@@ -154,9 +153,7 @@ export function Sidebar() {
               </div>
             </div>
             <Button
-              variant="outline"
-              size="sm"
-              className="w-full"
+              className="w-full border border-gray-300 hover:bg-gray-50"
               onClick={logout}
             >
               <LogOut className="w-4 h-4 mr-2" />
@@ -214,9 +211,7 @@ export function Sidebar() {
               </div>
             </div>
             <Button
-              variant="outline"
-              size="sm"
-              className="w-full"
+              className="w-full border border-gray-300 hover:bg-gray-50"
               onClick={logout}
             >
               <LogOut className="w-4 h-4 mr-2" />
@@ -229,8 +224,7 @@ export function Sidebar() {
       {/* Mobile menu button */}
       <div className="lg:hidden fixed top-4 left-4 z-40">
         <Button
-          variant="outline"
-          size="sm"
+          className="border border-gray-300 hover:bg-gray-50 p-2"
           onClick={() => setSidebarOpen(true)}
         >
           <Menu className="w-4 h-4" />
