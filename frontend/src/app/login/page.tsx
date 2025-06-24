@@ -107,8 +107,18 @@ export default function LoginPage() {
             </form>
             
             <div className="mt-6 text-center">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 mb-4">
                 Sistema 100% autônomo • Zero intervenção humana
+              </p>
+              <p className="text-sm text-gray-600">
+                Não tem uma conta?{' '}
+                <button
+                  type="button"
+                  onClick={() => router.push('/register')}
+                  className="text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  Criar conta
+                </button>
               </p>
             </div>
           </CardContent>

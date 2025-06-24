@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import routes from './routes';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Middleware básico
 app.use(helmet());
