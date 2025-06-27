@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nfeProc xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00"><NFe xmlns="http://www.portalfiscal.inf.br/nfe"><infNFe Id="NFe52250401409655000180558900251807611254630750" versao="4.00"><ide><cUF>52</cUF><cNF>25463075</cNF><natOp>OUTRA REMESSAS</natOp><mod>55</mod><serie>890</serie><nNF>25180761</nNF><dhEmi>2025-04-03T12:51:35-03:00</dhEmi><dhSaiEnt>2025-04-03T00:00:00-03:00</dhSaiEnt><tpNF>1</tpNF><idDest>1</idDest><cMunFG>5209101</cMunFG><tpImp>1</tpImp><tpEmis>1</tpEmis><cDV>0</cDV><tpAmb>1</tpAmb><finNFe>1</finNFe><indFinal>0</indFinal><indPres>9</indPres><indIntermed>0</indIntermed><procEmi>1</procEmi><verProc>1</verProc></ide><emit><CPF>46376976115</CPF><xNome>EDNO MARTINS ROSA</xNome><enderEmit><xLgr>RUA PERNAMBUCO</xLgr><nro>800</nro><xBairro>CENTRO</xBairro><cMun>5209101</cMun><xMun>GOIATUBA</xMun><UF>GO</UF><CEP>00000000</CEP><fone>00000000000000</fone></enderEmit><IE>ISENTO</IE><CRT>3</CRT></emit><avulsa><CNPJ>01409655000180</CNPJ><xOrgao>SECRETARIA DA FAZENDA DE GOIAS</xOrgao><matr>27219</matr><xAgente>SERGIO APARECIDO DE OLIVEIRA</xAgente><fone>6232692002</fone><UF>GO</UF><nDAR>N/A</nDAR><dEmi>2025-04-03</dEmi><vDAR>0.00</vDAR><repEmi>SECRETARIA DA FAZENDA</repEmi></avulsa><dest><CNPJ>24544420000105</CNPJ><xNome>Aviz Alimentos Ltda</xNome><enderDest><xLgr>RODOVIA GO 020</xLgr><nro>S/N</nro><xBairro>ZONA RURAL</xBairro><cMun>5203302</cMun><xMun>BELA VISTA DE GOIAS</xMun><UF>GO</UF><CEP>75240000</CEP><fone>00000000000000</fone></enderDest><indIEDest>1</indIEDest><IE>104690097</IE></dest><det nItem="1"><prod><cProd>0009991</cProd><cEAN>SEM GTIN</cEAN><xProd>SERVICO DE TRANSPORTE FRETE</xProd><NCM>99999999</NCM><cBenef>GO811024</cBenef><CFOP>5949</CFOP><uCom>UN</uCom><qCom>1.0000</qCom><vUnCom>40774.5000000000</vUnCom><vProd>40774.50</vProd><cEANTrib>SEM GTIN</cEANTrib><uTrib>UN</uTrib><qTrib>1.0000</qTrib><vUnTrib>40774.5000000000</vUnTrib><indTot>1</indTot></prod><imposto><ICMS><ICMS40><orig>0</orig><CST>40</CST></ICMS40></ICMS><PIS><PISNT><CST>08</CST></PISNT></PIS><COFINS><COFINSNT><CST>08</CST></COFINSNT></COFINS></imposto></det><total><ICMSTot><vBC>0.00</vBC><vICMS>0.00</vICMS><vICMSDeson>0.00</vICMSDeson><vFCP>0.00</vFCP><vBCST>0.00</vBCST><vST>0.00</vST><vFCPST>0.00</vFCPST><vFCPSTRet>0.00</vFCPSTRet><vProd>40774.50</vProd><vFrete>0.00</vFrete><vSeg>0.00</vSeg><vDesc>0.00</vDesc><vII>0.00</vII><vIPI>0.00</vIPI><vIPIDevol>0.00</vIPIDevol><vPIS>0.00</vPIS><vCOFINS>0.00</vCOFINS><vOutro>0.00</vOutro><vNF>40774.50</vNF></ICMSTot></total><transp><modFrete>0</modFrete><vol><qVol>1</qVol><pesoL>0.000</pesoL><pesoB>0.000</pesoB></vol></transp><pag><detPag><indPag>0</indPag><tPag>90</tPag><vPag>40774.50</vPag></detPag></pag><infAdic><infCpl>Transporte: NAO IRA TRANSPORTAR</infCpl></infAdic></infNFe><Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+<SignedInfo>
+<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<Reference URI="#NFe52250401409655000180558900251807611254630750">
+<Transforms>
+<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+</Transforms>
+<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<DigestValue>VK6s4F6N8rnkWF9xB2k9Zu4N/fs=</DigestValue>
+</Reference>
+</SignedInfo>
+<SignatureValue>
+bd1t61t3lkHomztb+zaBa1qD6B2cbqOb0tG91F425Qf4NJERuEk4AsT9MBESC3ttyoEAXch2Ty3O
+xVJ/47Z0moBzaXTEKcHNtlyg9vKSrlteaO43csGwPV5OgBiuy0XM7Fh2tHGYW8hI8JMsOZuMgJ6v
+frMDXnXyxydCmwz51AIm+V910cewwIhr2cXHr4nITWnfDiSCM60UmlpfABzFnJgyPm7gjCHLenwX
+rAKikxtVcsGB8H6k9D1s6lyItLEQRYS8yXwt6eCWWNiLaS1i7YS9smUBGtd+ojsYjA/1S8uQUDa7
+pFeeM1nbhyqmrue7uAZn4c2XYPTPk+YJD/48/w==
+</SignatureValue>
+<KeyInfo>
+<X509Data>
+<X509Certificate>
+MIIIXDCCBkSgAwIBAgIKEd4kBCNatYafcjANBgkqhkiG9w0BAQ0FADB3MQswCQYDVQQGEwJCUjET
+MBEGA1UEChMKSUNQLUJyYXNpbDE1MDMGA1UECxMsQXV0b3JpZGFkZSBDZXJ0aWZpY2Fkb3JhIFJh
+aXogQnJhc2lsZWlyYSB2MTAxHDAaBgNVBAMTE0FDIFNPTFVUSSBTU0wgRVYgRzQwHhcNMjQwNDI5
+MTc1MDAwWhcNMjUwNDI5MTc1MDAwWjCBwjELMAkGA1UEBhMCQlIxKTAnBgNVBAoMIFNFQ1JFVEFS
+SUEgREUgRVNUQURPIERBIEVDT05PTUlBMQswCQYDVQQIDAJHTzEQMA4GA1UEBwwHR29pYW5pYTEX
+MBUGA1UEBRMOMDE0MDk2NTUwMDAxODAxHDAaBgNVBAMME2R0ZS5zZWZhei5nby5nb3YuYnIxHTAb
+BgNVBA8MFFByaXZhdGUgT3JnYW5pemF0aW9uMRMwEQYLKwYBBAGCNzwCAQMTAkJSMIIBIjANBgkq
+hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnUOVmU9+rmnFn2fJpUEGqjYr3+AKKXZeTyxr99bTfCnE
+TAbK812FjFOv1zIJuNoa3bZdfVh1B2v8eMCQiL8a3Ky8m5yUw7ArrVXMDC7ptg8EKd2xYv8WRC51
+fpQ/7pCJPCNLs/1zqydWpq9bHp2SO7+Zr+xxjmvz5m7aFmnY1TMEDPz7VFRhqyth6dStnwsQINS5
+vHuKDeVNdDRBLC69Ek7wN+YoB8iJ+rmDtKzZQzWCGTbsr0d842VVyN4YplGt6dyJYEGJUFM9O67O
+SyO26Q0yEtzahmS+XUgBef2ajXtEbu7GkJtlYLslF3vFkMbxn6x7E0oQq3HciXcN7KkZ8QIDAQAB
+o4IDnDCCA5gwCQYDVR0TBAIwADAfBgNVHSMEGDAWgBT+BrkslX4v5tC4qPEvt/IuhdXXwDCBgAYI
+KwYBBQUHAQEEdDByMEYGCCsGAQUFBzAChjpodHRwOi8vY2NkLmFjc29sdXRpLmNvbS5ici9sY3Iv
+YWMtc29sdXRpLXNzbC1ldi12MTAtZzQuY3J0MCgGCCsGAQUFBzABhhxodHRwOi8vb2NzcDMuYWNz
+b2x1dGkuY29tLmJyMB4GA1UdEQQXMBWCE2R0ZS5zZWZhei5nby5nb3YuYnIwZAYDVR0gBF0wWzAH
+BgVngQwBATBQBgZgTAECAXAwRjBEBggrBgEFBQcCARY4aHR0cDovL2NjZC5hY3NvbHV0aS5jb20u
+YnIvZG9jcy9kcGMtYWMtc29sdXRpLXNzbC1ldi5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsG
+AQUFBwMBMIGQBgNVHR8EgYgwgYUwQKA+oDyGOmh0dHA6Ly9jY2QuYWNzb2x1dGkuY29tLmJyL2xj
+ci9hYy1zb2x1dGktc3NsLWV2LXYxMC1nNC5jcmwwQaA/oD2GO2h0dHA6Ly9jY2QyLmFjc29sdXRp
+LmNvbS5ici9sY3IvYWMtc29sdXRpLXNzbC1ldi12MTAtZzQuY3JsMB0GA1UdDgQWBBQcHECTMBVG
+6RopTtBsZUAe5rzvZDAOBgNVHQ8BAf8EBAMCBaAwggF+BgorBgEEAdZ5AgQCBIIBbgSCAWoBaAB2
+AE51oydcmhDDOFts1N8/Uusd8OCOG41pwLH6ZLFimjnfAAABjysCU3kAAAQDAEcwRQIgT3IOCwUx
+4vrdqLCNi5P303iyyAmAUs04wLDW9qXt9LgCIQDD/8LicCgVp6NOBRJPSoxceBchmE6Rh/oCDWli
+BdMqPgB2AOCSs/wMHcjnaDYf3mG5lk0KUngZinLWcsSwTaVtb1QEAAABjysCVwUAAAQDAEcwRQIg
+bzZv77UfluMlm89pQXqXabQOIOEtEy3QpuAvgYNx2dgCIQC1iNK4fqD14nz7/Z517HMPHUhmDUe1
+jjOIKwknAJAVVQB2AM8RVu7VLnyv84db2Wkum+kacWdKsBfsrAHSW3fOzDsIAAABjysCW+YAAAQD
+AEcwRQIhALVjHHBC9bzHoOgw0qDYqClOC2Qur2Vo/e172QmECHnnAiAY2U6BiznX/Q4gB5tXT6fM
+H8edsNLeW0WtAbDD3q6JKjANBgkqhkiG9w0BAQ0FAAOCAgEAxcHna2YiP2P85yQqE0PHaJkIAVx3
+FIxyOnkZMqnd8sCiFM7qZgjHa7bYZ1vWjy0AcjVW71AWPhbAcTp7tK/3RTMBsmLimfV/SypZ59Ks
+Usa4j8D0StbXzmBZEpy5CDnEEra487ECn7RDZ9F0J1c8tqvxDy/5MY9xf33BVBZRErAa83Bld3O7
+wCD/irRlnyK0aRfdQyDASyHnD+xrkiOxQBxoMzJSpRfQK8ebRKe6RrzX5GERXBzYM3bfAY9gKhpf
+qFvuR7tDB0bXYi/ffVyGwDNpW8gSBJC372AMd1Ch9zLNz/x3N4LmJ/eZNiEzO1eScaOFBDIcaYTh
+oHAP7574wloGYJLUAWw8MyBqTDcPJtPKem0n+3vg07ZiIKlkSc019HoA/V8R7KTmFU0XiACmabo7
+WS8d4BXVkS29V1a4E3SNSd16j2BhRRJ6C51Xdzks1m2mbLd3lmvNb6f/aCQR8zysyVD677uMkFSH
+LLb16OTFNsJGo95fRbRRCqSw9/y0wCeii8HCAWKzbD9UMCTBvnY4W+UTr2UoNagd33aa2WY77mGy
+3qk0DvcwK3kFgrUUn2ViSoDskpyuowXe7ZyzTNDzL2q3USBTanvwxQaYUG/qTejaN2VUPakuEDRK
+KNV+Ngha3oZSzZOPd4oT52gUZm4dZXzQhTPlR+Hs9RE/wlw=
+</X509Certificate>
+</X509Data>
+</KeyInfo>
+</Signature></NFe><protNFe versao="4.00"><infProt Id="ID152258741343583"><tpAmb>1</tpAmb><verAplic>0.0.1</verAplic><chNFe>52250401409655000180558900251807611254630750</chNFe><dhRecbto>2025-04-03T12:51:37-03:00</dhRecbto><nProt>152258741343583</nProt><digVal>VK6s4F6N8rnkWF9xB2k9Zu4N/fs=</digVal><cStat>100</cStat><xMotivo>Autorizado o uso da NF-e</xMotivo></infProt></protNFe></nfeProc>

@@ -11,16 +11,16 @@
 
 ## 🏗️ Arquitetura de Agentes — Quantos Precisam?
 
-O sistema será dividido em **7 agentes autônomos**, cada um com uma função crítica, trabalhando de forma sincronizada e 100% automatizada:
+O sistema será dividido em **7 a 12 agentes autônomos**, cada um com uma função crítica, trabalhando de forma sincronizada e 100% automatizada:
 
 ### 🔥 Agente 1 — Upload & Entrada de Dados
 - Monitorar pastas, e-mails, APIs ou diretórios (Google Drive, AWS S3, FTP, etc.).
-- Realizar upload automático dos arquivos: XML NF-e, SPED ICMS/IPI, SPED Contribuições, ECD, ECF, CIAP, Inventário (Bloco H).
+- Realizar upload automático dos arquivos: XML NF-e, SPED ICMS/IPI, SPED Contribuições, ECD, ECF, CIAP, Inventário (Bloco H) todos os blocos dos sped's e todas as tag's dos xml, tem que popular tudo no banco de dados.
 - Validação de integridade dos arquivos.
 - Sem botão, sem clique, sem interação. Tudo acontece via watcher automático.
 
 ### 🔥 Agente 2 — Parsing & Leitura dos Documentos
-- Leitura e parser automático dos documentos XML e SPED.
+- Leitura e parser automático dos documentos XML gerar danfe de todos os xml e SPED.
 - Indexação dos dados em banco (MongoDB, PostgreSQL ou Firestore).
 - Validação de CST, CFOP, NCM, CNPJ, natureza da operação e outros dados fiscais e contábeis.
 
@@ -30,9 +30,10 @@ O sistema será dividido em **7 agentes autônomos**, cada um com uma função c
   - Crédito outorgado.
   - Protege Goiás.
   - DIFAL.
+  - DIFAL compras de empresas do simples nacional
   - Crédito de ativo (CIAP).
 - Apuração por produto, não apenas geral.
-- ICMS discriminado na tela por:
+- ICMS, difal, difal simples nacional, icms substituição tributaria, beneficio fiscal discriminado na tela por:
   - Produto.
   - Tipo de cliente (atacado, varejo, consumidor final).
   - Tipo de operação (interna, interestadual, exportação).
@@ -40,7 +41,7 @@ O sistema será dividido em **7 agentes autônomos**, cada um com uma função c
 
 ### 🔥 Agente 4 — Apuração Tributária Federal (PIS/COFINS/IRPJ/CSLL)
 - Aplicação dos benefícios:
-  - Alíquota zero.
+  - Alíquota zero, monofasico etc...
   - Crédito presumido.
   - Crédito de insumos, energia, frete, embalagens.
 - Cálculo item a item, não por faturamento total.
@@ -56,11 +57,11 @@ O sistema será dividido em **7 agentes autônomos**, cada um com uma função c
 - Controle 100% IA do estoque:
   - Entradas (compras).
   - Saídas (vendas).
-  - Movimentações internas.
+  - Movimentações internas. saldo inicial + compras - vendas = saldo final, fazer o calculo inverso para saber quanto tem que declarar de estoque inicial, por produto.
 - Validação do Bloco H (Inventário) e Bloco G (Ativo Imobilizado).
 - Cálculo do custo médio de cada produto com base:
   - Nas entradas + despesas acessórias + benefícios fiscais.
-- Controle de CIAP com apropriação mensal dos créditos.
+- Controle de CIAP com apropriação mensal dos créditos. todos os agentes tera seu prompt para ensinar, fazer todos os prompts para cada agente.
 
 ### 🔥 Agente 6 — Precificação & Margem
 - Análise automática de precificação:
@@ -100,7 +101,7 @@ Se durante a execução surgir uma dúvida, falha, exceção ou erro, o agente:
 - Upload dos arquivos (XML, SPED, ECD, ECF) ocorra via watcher automático de diretórios ou APIs.
 - Parsing e leitura de dados sejam feitos automaticamente.
 - Apuração de ICMS, PIS/COFINS, IRPJ e CSLL sejam realizados sem input manual, inclusive com aplicação de benefícios fiscais estaduais e federais.
-- O sistema calcule a carga tributária efetiva por produto, aplicando ICMS, Protege, DIFAL, PIS/COFINS, crédito presumido, crédito outorgado e alíquota zero.
+- O sistema calcule a carga tributária efetiva por produto, aplicando ICMS, Protege, DIFAL e difal simples naciosl, PIS/COFINS, crédito presumido, crédito outorgado e alíquota zero.
 - Estoque seja controlado automaticamente, com custo médio atualizado, validando Bloco H, CIAP e movimentos.
 - O sistema gere dashboards com visão geral (valores totais) e links para drilldown até o nível de produto, mostrando custos, carga tributária embutida e margem de lucro.
 - Todo erro, exceção ou falta de dado é tratado por autocorreção, fallback ou inferência lógica da IA, nunca solicitando input humano.

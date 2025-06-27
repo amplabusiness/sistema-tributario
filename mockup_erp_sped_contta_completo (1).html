@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP SPED Contta - Mockup Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Estilos personalizados */
+        body {
+            background-color: #111827; /* bg-gray-900 */
+            color: #d1d5db; /* text-gray-300 */
+        }
+        .sidebar {
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 4rem; /* Ajuste conforme necessário */
+        }
+        .sidebar.expanded {
+            width: 16rem; /* Ajuste conforme necessário */
+        }
+        .content {
+            transition: margin-left 0.3s ease;
+        }
+        .sidebar.collapsed ~ .content {
+            margin-left: 4rem;
+        }
+        .sidebar.expanded ~ .content {
+            margin-left: 16rem;
+        }
+        .dark .bg-gray-800 { background-color: #1f2937; }
+        .dark .bg-gray-700 { background-color: #374151; }
+        .dark .text-gray-400 { color: #9ca3af; }
+        .dark .text-white { color: #ffffff; }
+        .dark .border-gray-700 { border-color: #374151; }
+        .dark .hover\:bg-gray-700:hover { background-color: #374151; }
+        .dark .hover\:text-white:hover { color: #ffffff; }
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .status-green { background-color: #10b981; } /* green-500 */
+        .status-yellow { background-color: #f59e0b; } /* amber-500 */
+        .status-red { background-color: #ef4444; } /* red-500 */
+        .status-blue { background-color: #3b82f6; } /* blue-500 */
+        .status-gray { background-color: #6b7280; } /* gray-500 */
+
+        /* Animação de processamento */
+        @keyframes pulse-bg {
+            0%, 100% { background-color: rgba(59, 130, 246, 0.1); }
+            50% { background-color: rgba(59, 130, 246, 0.3); }
+        }
+        .processing-pulse {
+            animation: pulse-bg 2s infinite;
+        }
+
+        /* Estilo para visualizador SPED */
+        .sped-tree ul {
+            padding-left: 1rem;
+            border-left: 1px dashed #4b5563; /* gray-600 */
+        }
+        .sped-tree li {
+            margin-top: 0.25rem;
+            position: relative;
+        }
+        .sped-tree li::before {
+            content: "";
+            position: absolute;
+            top: 0.7rem;
+            left: -1rem;
+            width: 0.75rem;
+            height: 1px;
+            background-color: #4b5563; /* gray-600 */
+        }
+        .sped-record {
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+        .sped-record:hover {
+            background-color: #374151; /* gray-700 */
+        }
+        .sped-record.selected {
+            background-color: #4b5563; /* gray-600 */
+            font-weight: bold;
+        }
+        .sped-data-table th, .sped-data-table td {
+            border: 1px solid #4b5563; /* gray-600 */
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- Tela de Login (Inicialmente visível) -->
+    <div id="login-screen" class="flex items-center justify-center min-h-screen bg-gray-900">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm">
+            <div class="text-center mb-6">
+                <img src="https://via.placeholder.com/150x50?text=Ampla+Logo" alt="Ampla Contabilidade Logo" class="mx-auto mb-4">
+                <h2 class="text-2xl font-bold text-white">ERP SPED Contta</h2>
+                <p class="text-gray-400">Automação Contábil Inteligente</p>
+            </div>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                    <input type="email" id="email" name="email" value="usuario@amplacontabil.com.br" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Senha</label>
+                    <input type="password" id="password" name="password" value="senha123" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+                    Entrar
+                </button>
+                <p id="login-error" class="text-red-500 text-sm mt-4 text-center hidden">Credenciais inválidas.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Estrutura Principal da Aplicação (Inicialmente oculta) -->
+    <div id="app-container" class="hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar expanded fixed top-0 left-0 z-40 h-screen bg-gray-800 border-r border-gray-700 overflow-y-auto">
+            <div class="flex items-center justify-between p-4 h-16 border-b border-gray-700">
+                <span id="sidebar-logo" class="text-xl font-semibold text-white whitespace-nowrap">ERP Contta</span>
+                <button id="toggle-sidebar-btn" class="text-gray-400 hover:text-white focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <nav class="mt-4 px-2 space-y-1">
+                <a href="#dashboard" class="nav-link flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group active">
+                    <i class="fas fa-tachometer-alt w-6 h-6 text-gray-400 group-hover:text-white transition duration-75"></i>
+                    <span class="ml-3 sidebar-text">Dashboard</span>
+                </a>
+                <a href="#clientes" class="nav-link flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="fas fa-users w-6 h-6 text-gray-400 group-hover:text-white transition duration-75"></i>
+                    <span class="ml-3 sidebar-text">Clientes</span>
+                </a>
+                <a href="#documentos" class="nav-link flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="fas fa-file-alt w-6 h-6 text-gray-400 group-hover:text-white transition duration-75"></i>
+                    <span class="ml-3 sidebar-text">Documentos</span>
+                </a>
+                <a href="#obrigacoes" class="nav-link flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="fas fa-tasks w-6 h-6 text-gray-400 group-hover:text-white transition duration-75"></i>
+                    <span class="ml-3 sidebar-text">Obrigações</span>
+                </a>
+                 <a href="#sped-viewer" class="nav-link flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="fas fa-search w-6 h-6 text-gray-400 group-hover:text-white transition duration-75"></i>
+                    <span class="ml-3 sidebar-text">SPED Viewer</span>
+                </a>
+                <a href="#reforma-tributaria" class="nav-link flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="fas fa-landmark w-6 h-6 text-gray-400 group-hover:text-white transition duration-75"></i>
+                    <span class="ml-3 sidebar-text">Reforma Tributária</span>
+                </a>
+                <a href="#configuracoes" class="nav-link flex items-center p-2 text-base font-normal text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group">
+                    <i class="fas fa-cog w-6 h-6 text-gray-400 group-hover:text-white transition duration-75"></i>
+                    <span class="ml-3 sidebar-text">Configurações</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main id="main-content" class="content ml-64 p-4 pt-20">
+            <!-- Header -->
+            <header class="fixed top-0 left-64 right-0 z-30 bg-gray-800 border-b border-gray-700 h-16 flex items-center justify-between px-4">
+                 <div class="flex items-center">
+                    <h1 id="page-title" class="text-xl font-semibold text-white">Dashboard</h1>
+                 </div>
+                 <div class="flex items-center space-x-4">
+                    <button id="notifications-btn" class="relative text-gray-400 hover:text-white">
+                        <i class="fas fa-bell"></i>
+                        <span class="absolute top-0 right-0 -mt-1 -mr-1 px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full">3</span>
+                    </button>
+                    <div class="relative">
+                        <button id="user-menu-btn" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                            <img class="h-8 w-8 rounded-full" src="https://via.placeholder.com/32" alt="User avatar">
+                            <span class="hidden md:inline ml-2 text-white">Usuário Teste</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs text-gray-400"></i>
+                        </button>
+                        <!-- Dropdown User Menu (Implementar com JS) -->
+                    </div>
+                 </div>
+            </header>
+
+            <!-- Seção de Conteúdo Dinâmico -->
+            <div id="content-area">
+                <!-- O conteúdo de cada página será carregado aqui -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Templates de Conteúdo (Ocultos por padrão) -->
+    <template id="dashboard-template">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <!-- Cards de Status -->
+            <div class="bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-400 mb-1">Status do Sistema</h3>
+                <p class="text-2xl font-semibold text-white flex items-center"><span class="status-dot status-green"></span> Online</p>
+                <p class="text-xs text-gray-500 mt-1">Última verificação: agora</p>
+            </div>
+            <div class="bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-400 mb-1">Clientes Ativos</h3>
+                <p class="text-2xl font-semibold text-white">148</p>
+                <p class="text-xs text-gray-500 mt-1">+ 2 este mês</p>
+            </div>
+            <div class="bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-400 mb-1">Documentos Processados (Hoje)</h3>
+                <p class="text-2xl font-semibold text-white">15.782</p>
+                <p class="text-xs text-gray-500 mt-1">Média: 12.500/dia</p>
+            </div>
+            <div class="bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-sm font-medium text-gray-400 mb-1">Obrigações Entregues (Mês)</h3>
+                <p class="text-2xl font-semibold text-white">95%</p>
+                <p class="text-xs text-gray-500 mt-1">7 pendentes</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+            <!-- Status dos Agentes IA -->
+            <div class="lg:col-span-2 bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-lg font-semibold text-white mb-3">Status dos Agentes IA</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="border border-gray-700 rounded p-3 processing-pulse">
+                        <h4 class="font-medium text-gray-300 flex items-center"><i class="fas fa-robot mr-2 text-blue-400"></i> Coleta (e-Malote)</h4>
+                        <p class="text-sm text-gray-400 mt-1"><span class="status-dot status-blue"></span> Processando diretório /Clientes/Empresa_A/NFe...</p>
+                        <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                            <div class="bg-blue-500 h-1.5 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+                     <div class="border border-gray-700 rounded p-3">
+                        <h4 class="font-medium text-gray-300 flex items-center"><i class="fas fa-calculator mr-2 text-green-400"></i> Cálculo ICMS</h4>
+                        <p class="text-sm text-gray-400 mt-1"><span class="status-dot status-green"></span> Ocioso - Aguardando novos documentos</p>
+                         <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                            <div class="bg-green-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="border border-gray-700 rounded p-3 processing-pulse">
+                        <h4 class="font-medium text-gray-300 flex items-center"><i class="fas fa-file-invoice-dollar mr-2 text-purple-400"></i> SPED Fiscal</h4>
+                        <p class="text-sm text-gray-400 mt-1"><span class="status-dot status-blue"></span> Gerando Bloco E para Cliente B...</p>
+                         <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                            <div class="bg-purple-500 h-1.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    <div class="border border-gray-700 rounded p-3">
+                        <h4 class="font-medium text-gray-300 flex items-center"><i class="fas fa-chart-line mr-2 text-yellow-400"></i> Análise Tributária</h4>
+                        <p class="text-sm text-gray-400 mt-1"><span class="status-dot status-green"></span> Ocioso - Última análise: 10 min atrás</p>
+                         <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                            <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                     <div class="border border-gray-700 rounded p-3">
+                        <h4 class="font-medium text-gray-300 flex items-center"><i class="fas fa-book mr-2 text-indigo-400"></i> Contabilização (ECD)</h4>
+                        <p class="text-sm text-gray-400 mt-1"><span class="status-dot status-green"></span> Ocioso - Aguardando fechamento fiscal</p>
+                         <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                            <div class="bg-indigo-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                     <div class="border border-gray-700 rounded p-3">
+                        <h4 class="font-medium text-gray-300 flex items-center"><i class="fas fa-shield-alt mr-2 text-red-400"></i> Monitoramento Segurança</h4>
+                        <p class="text-sm text-gray-400 mt-1"><span class="status-dot status-green"></span> Nenhuma ameaça detectada</p>
+                         <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                            <div class="bg-red-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alertas e Notificações -->
+            <div class="bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-lg font-semibold text-white mb-3">Alertas Importantes</h3>
+                <div class="space-y-3 max-h-60 overflow-y-auto">
+                    <div class="flex items-start space-x-3 p-2 bg-yellow-900 bg-opacity-30 rounded border-l-4 border-yellow-500">
+                        <i class="fas fa-exclamation-triangle text-yellow-400 mt-1"></i>
+                        <div>
+                            <p class="text-sm font-medium text-yellow-300">Certificado Vencendo</p>
+                            <p class="text-xs text-yellow-400">Certificado A1 de "Empresa C Ltda" vence em 7 dias.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-2 bg-red-900 bg-opacity-30 rounded border-l-4 border-red-500">
+                        <i class="fas fa-times-circle text-red-400 mt-1"></i>
+                        <div>
+                            <p class="text-sm font-medium text-red-300">Falha na Entrega</p>
+                            <p class="text-xs text-red-400">SPED Contribuições (Cliente D) - Erro na validação PVA.</p>
+                        </div>
+                    </div>
+                     <div class="flex items-start space-x-3 p-2 bg-blue-900 bg-opacity-30 rounded border-l-4 border-blue-500">
+                        <i class="fas fa-info-circle text-blue-400 mt-1"></i>
+                        <div>
+                            <p class="text-sm font-medium text-blue-300">Insight IA</p>
+                            <p class="text-xs text-blue-400">Oportunidade de crédito PIS/COFINS identificada para "Empresa E".</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+             <!-- Gráfico de Obrigações -->
+            <div class="bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-lg font-semibold text-white mb-3">Status das Obrigações (Mês Atual)</h3>
+                <canvas id="obligationsChart"></canvas>
+            </div>
+
+            <!-- Mapa Neural (Simplificado) -->
+            <div class="bg-gray-800 rounded-lg shadow p-4">
+                <h3 class="text-lg font-semibold text-white mb-3">Mapa Neural de Atividade</h3>
+                 <div id="neuralMapChart"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="clientes-template">
+        <div class="bg-gray-800 rounded-lg shadow p-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-white">Gerenciamento de Clientes</h2>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-sm flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Novo Cliente (CNPJA)
+                </button>
+            </div>
+            <div class="mb-4">
+                <input type="text" placeholder="Buscar cliente por nome ou CNPJ..." class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-400">
+                    <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                        <tr>
+                            <th scope="col" class="py-3 px-6">Nome / Razão Social</th>
+                            <th scope="col" class="py-3 px-6">CNPJ</th>
+                            <th scope="col" class="py-3 px-6">Regime</th>
+                            <th scope="col" class="py-3 px-6">Status</th>
+                            <th scope="col" class="py-3 px-6">Certificado</th>
+                            <th scope="col" class="py-3 px-6">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                            <td class="py-4 px-6 font-medium text-white whitespace-nowrap">Empresa A Ltda</td>
+                            <td class="py-4 px-6">11.111.111/0001-11</td>
+                            <td class="py-4 px-6">Lucro Presumido</td>
+                            <td class="py-4 px-6"><span class="status-dot status-green"></span> Ativo</td>
+                            <td class="py-4 px-6"><span class="status-dot status-green"></span> Válido (300 dias)</td>
+                            <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Detalhes</a></td>
+                        </tr>
+                         <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                            <td class="py-4 px-6 font-medium text-white whitespace-nowrap">Comércio B S/A</td>
+                            <td class="py-4 px-6">22.222.222/0001-22</td>
+                            <td class="py-4 px-6">Lucro Real</td>
+                            <td class="py-4 px-6"><span class="status-dot status-green"></span> Ativo</td>
+                            <td class="py-4 px-6"><span class="status-dot status-green"></span> Válido (150 dias)</td>
+                            <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Detalhes</a></td>
+                        </tr>
+                         <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                            <td class="py-4 px-6 font-medium text-white whitespace-nowrap">Serviços C ME</td>
+                            <td class="py-4 px-6">33.333.333/0001-33</td>
+                            <td class="py-4 px-6">Simples Nacional</td>
+                            <td class="py-4 px-6"><span class="status-dot status-green"></span> Ativo</td>
+                            <td class="py-4 px-6"><span class="status-dot status-yellow"></span> Vence em 7 dias</td>
+                            <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Detalhes</a></td>
+                        </tr>
+                         <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                            <td class="py-4 px-6 font-medium text-white whitespace-nowrap">Indústria D EIRELI</td>
+                            <td class="py-4 px-6">44.444.444/0001-44</td>
+                            <td class="py-4 px-6">Lucro Real</td>
+                            <td class="py-4 px-6"><span class="status-dot status-red"></span> Inativo</td>
+                            <td class="py-4 px-6"><span class="status-dot status-red"></span> Expirado</td>
+                            <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Detalhes</a></td>
+                        </tr>
+                        <!-- Mais linhas simuladas -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Paginação -->
+        </div>
+    </template>
+
+    <template id="documentos-template">
+         <div class="bg-gray-800 rounded-lg shadow p-4">
+            <h2 class="text-xl font-semibold text-white mb-4">Hub de Documentos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div>
+                    <label for="doc-type" class="block text-sm font-medium text-gray-300 mb-1">Tipo</label>
+                    <select id="doc-type" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Todos</option>
+                        <option value="nfe">NFe</option>
+                        <option value="cte">CTe</option>
+                        <option value="nfse">NFSe</option>
+                        <option value="sped">SPED</option>
+                    </select>
+                </div>
+                 <div>
+                    <label for="doc-client" class="block text-sm font-medium text-gray-300 mb-1">Cliente</label>
+                    <select id="doc-client" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Todos</option>
+                        <option value="1">Empresa A Ltda</option>
+                        <option value="2">Comércio B S/A</option>
+                         <option value="3">Serviços C ME</option>
+                    </select>
+                </div>
+                 <div>
+                    <label for="doc-period" class="block text-sm font-medium text-gray-300 mb-1">Período</label>
+                    <input type="month" id="doc-period" value="2025-05" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                 <div>
+                    <label for="doc-status" class="block text-sm font-medium text-gray-300 mb-1">Status IA</label>
+                    <select id="doc-status" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Todos</option>
+                        <option value="pending">Pendente</option>
+                        <option value="processing">Processando</option>
+                        <option value="processed">Processado</option>
+                        <option value="error">Erro</option>
+                    </select>
+                </div>
+            </div>
+             <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-400">
+                    <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                        <tr>
+                            <th scope="col" class="py-3 px-6">Tipo</th>
+                            <th scope="col" class="py-3 px-6">Chave / ID</th>
+                            <th scope="col" class="py-3 px-6">Cliente</th>
+                            <th scope="col" class="py-3 px-6">Data Emissão</th>
+                            <th scope="col" class="py-3 px-6">Valor</th>
+                            <th scope="col" class="py-3 px-6">Status Coleta</th>
+                            <th scope="col" class="py-3 px-6">Status IA</th>
+                            <th scope="col" class="py-3 px-6">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                            <td class="py-4 px-6">NFe</td>
+                            <td class="py-4 px-6 font-mono text-xs">3525...5678</td>
+                            <td class="py-4 px-6">Empresa A Ltda</td>
+                            <td class="py-4 px-6">30/05/2025</td>
+                            <td class="py-4 px-6">R$ 1.250,00</td>
+                            <td class="py-4 px-6"><span class="status-dot status-green"></span> Coletado</td>
+                            <td class="py-4 px-6"><span class="status-dot status-green"></span> Processado</td>
+                            <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Ver XML</a></td>
+                        </tr>
+                         <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                            <td class="py-4 px-6">CTe</td>
+                            <td class="py-4 px-6 font-mono text-xs">3525...4321</td>
+                            <td class="py-4 px-6">Comércio B S/A</td>
+                            <td class="py-4 px-6">29/05/2025</td>
+                            <td class="py-4 px-6">R$ 350,00</td>
+                             <td class="py-4 px-6"><span class="status-dot status-green"></span> Coletado</td>
+                            <td class="py-4 px-6"><span class="status-dot status-blue"></span> Processando</td>
+                            <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Ver XML</a></td>
+                        </tr>
+                         <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                            <td class="py-4 px-6">NFSe</td>
+                            <td class="py-4 px-6 font-mono text-xs">SP-0012345</td>
+                            <td class="py-4 px-6">Serviços C ME</td>
+                            <td class="py-4 px-6">28/05/2025</td>
+                            <td class="py-4 px-6">R$ 5.000,00</td>
+                             <td class="py-4 px-6"><span class="status-dot status-green"></span> Coletado</td>
+                            <td class="py-4 px-6"><span class="status-dot status-red"></span> Erro (Schema)</td>
+                            <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Ver Detalhes</a></td>
+                        </tr>
+                         <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                            <td class="py-4 px-6">SPED Fiscal</td>
+                            <td class="py-4 px-6 font-mono text-xs">Empresa_A_042025</td>
+                            <td class="py-4 px-6">Empresa A Ltda</td>
+                            <td class="py-4 px-6">15/05/2025</td>
+                            <td class="py-4 px-6">-</td>
+                             <td class="py-4 px-6"><span class="status-dot status-green"></span> Gerado</td>
+                            <td class="py-4 px-6"><span class="status-dot status-gray"></span> Pendente</td>
+                            <td class="py-4 px-6"><a href="#sped-viewer" class="font-medium text-blue-500 hover:underline">Visualizar</a></td>
+                        </tr>
+                        <!-- Mais linhas simuladas -->
+                    </tbody>
+                </table>
+            </div>
+         </div>
+    </template>
+
+    <template id="obrigacoes-template">
+        <div class="bg-gray-800 rounded-lg shadow p-4">
+            <h2 class="text-xl font-semibold text-white mb-4">Monitoramento de Obrigações</h2>
+            <div class="mb-4 border-b border-gray-700">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-400">
+                    <li class="mr-2">
+                        <a href="#" class="inline-block p-4 text-blue-500 border-b-2 border-blue-500 rounded-t-lg active" aria-current="page">ICMS</a>
+                    </li>
+                    <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">PIS/COFINS</a>
+                    </li>
+                    <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">IRPJ/CSLL</a>
+                    </li>
+                     <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">ISS</a>
+                    </li>
+                     <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">Simples Nacional</a>
+                    </li>
+                     <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">eSocial</a>
+                    </li>
+                     <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">DCTFWeb</a>
+                    </li>
+                     <li>
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">Outras</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Conteúdo da Aba ICMS (Exemplo) -->
+            <div id="icms-content">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                     <div>
+                        <label for="icms-client" class="block text-sm font-medium text-gray-300 mb-1">Cliente</label>
+                        <select id="icms-client" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all">Todos</option>
+                            <option value="1">Empresa A Ltda</option>
+                            <option value="2">Comércio B S/A</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="icms-period" class="block text-sm font-medium text-gray-300 mb-1">Período</label>
+                        <input type="month" id="icms-period" value="2025-05" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                     <div>
+                        <label for="icms-status" class="block text-sm font-medium text-gray-300 mb-1">Status Apuração</label>
+                        <select id="icms-status" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all">Todos</option>
+                            <option value="pending">Pendente</option>
+                            <option value="processing">Processando</option>
+                            <option value="calculated">Calculado</option>
+                            <option value="sped_generated">SPED Gerado</option>
+                            <option value="delivered">Entregue</option>
+                            <option value="error">Erro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                            <tr>
+                                <th scope="col" class="py-3 px-6">Cliente</th>
+                                <th scope="col" class="py-3 px-6">Período</th>
+                                <th scope="col" class="py-3 px-6">Débitos</th>
+                                <th scope="col" class="py-3 px-6">Créditos</th>
+                                <th scope="col" class="py-3 px-6">Saldo Devedor</th>
+                                <th scope="col" class="py-3 px-6">Status Apuração</th>
+                                <th scope="col" class="py-3 px-6">SPED Fiscal</th>
+                                <th scope="col" class="py-3 px-6">Vencimento</th>
+                                <th scope="col" class="py-3 px-6">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                                <td class="py-4 px-6 font-medium text-white whitespace-nowrap">Empresa A Ltda</td>
+                                <td class="py-4 px-6">05/2025</td>
+                                <td class="py-4 px-6">R$ 15.800,00</td>
+                                <td class="py-4 px-6">R$ 12.200,00</td>
+                                <td class="py-4 px-6 text-red-400">R$ 3.600,00</td>
+                                <td class="py-4 px-6"><span class="status-dot status-green"></span> Entregue</td>
+                                <td class="py-4 px-6"><a href="#sped-viewer" class="text-blue-500 hover:underline">Visualizar</a></td>
+                                <td class="py-4 px-6">20/06/2025</td>
+                                <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Detalhes</a></td>
+                            </tr>
+                             <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                                <td class="py-4 px-6 font-medium text-white whitespace-nowrap">Comércio B S/A</td>
+                                <td class="py-4 px-6">05/2025</td>
+                                <td class="py-4 px-6">R$ 45.000,00</td>
+                                <td class="py-4 px-6">R$ 38.500,00</td>
+                                <td class="py-4 px-6 text-red-400">R$ 6.500,00</td>
+                                <td class="py-4 px-6"><span class="status-dot status-blue"></span> SPED Gerado</td>
+                                <td class="py-4 px-6"><a href="#sped-viewer" class="text-blue-500 hover:underline">Visualizar</a></td>
+                                <td class="py-4 px-6">20/06/2025</td>
+                                <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Detalhes</a></td>
+                            </tr>
+                             <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+                                <td class="py-4 px-6 font-medium text-white whitespace-nowrap">Indústria D EIRELI</td>
+                                <td class="py-4 px-6">05/2025</td>
+                                <td class="py-4 px-6">R$ 120.000,00</td>
+                                <td class="py-4 px-6">R$ 105.000,00</td>
+                                <td class="py-4 px-6 text-red-400">R$ 15.000,00</td>
+                                <td class="py-4 px-6"><span class="status-dot status-yellow"></span> Calculado</td>
+                                <td class="py-4 px-6">Pendente</td>
+                                <td class="py-4 px-6">20/06/2025</td>
+                                <td class="py-4 px-6"><a href="#" class="font-medium text-blue-500 hover:underline">Detalhes</a></td>
+                            </tr>
+                            <!-- Mais linhas simuladas -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="sped-viewer-template">
+        <div class="bg-gray-800 rounded-lg shadow p-4">
+            <h2 class="text-xl font-semibold text-white mb-4">Visualizador SPED</h2>
+            <div class="mb-4">
+                <label for="sped-file-select" class="block text-sm font-medium text-gray-300 mb-1">Selecione o Arquivo SPED</label>
+                <select id="sped-file-select" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Selecione...</option>
+                    <option value="sped_fiscal_empresa_a_052025.txt">SPED Fiscal - Empresa A Ltda - 05/2025</option>
+                    <option value="sped_contrib_empresa_b_052025.txt">SPED Contribuições - Comércio B S/A - 05/2025</option>
+                    <option value="ecd_empresa_a_2024.txt">ECD - Empresa A Ltda - 2024</option>
+                </select>
+            </div>
+
+            <div id="sped-content-area" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <!-- Árvore de Registros -->
+                <div class="md:col-span-1 bg-gray-700 rounded p-3 overflow-y-auto max-h-96 sped-tree">
+                    <h3 class="text-lg font-semibold text-white mb-2">Estrutura do Arquivo</h3>
+                    <ul id="sped-record-tree">
+                        <!-- Conteúdo da árvore será gerado por JS -->
+                    </ul>
+                </div>
+
+                <!-- Detalhes do Registro -->
+                <div class="md:col-span-2 bg-gray-700 rounded p-3">
+                    <h3 class="text-lg font-semibold text-white mb-2">Detalhes do Registro: <span id="selected-record-name">Nenhum</span></h3>
+                    <div id="sped-record-details" class="text-sm text-gray-300 overflow-x-auto">
+                        <p>Selecione um registro na árvore para ver os detalhes.</p>
+                        <!-- Tabela de dados será gerada por JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+     <template id="reforma-tributaria-template">
+        <div class="bg-gray-800 rounded-lg shadow p-4">
+            <h2 class="text-xl font-semibold text-white mb-4">Simulador Reforma Tributária (IBS/CBS)</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                 <div>
+                    <label for="reforma-client" class="block text-sm font-medium text-gray-300 mb-1">Cliente</label>
+                    <select id="reforma-client" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Todos</option>
+                        <option value="1">Empresa A Ltda</option>
+                        <option value="2">Comércio B S/A</option>
+                         <option value="3">Serviços C ME</option>
+                    </select>
+                </div>
+                 <div>
+                    <label for="reforma-period" class="block text-sm font-medium text-gray-300 mb-1">Período Simulado</label>
+                    <input type="month" id="reforma-period" value="2027-01" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Sistema Atual -->
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-3 border-b border-gray-700 pb-2">Sistema Atual (Estimado)</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between"><span>ICMS:</span> <span class="font-medium">R$ 3.600,00</span></div>
+                        <div class="flex justify-between"><span>IPI:</span> <span class="font-medium">R$ 1.200,00</span></div>
+                        <div class="flex justify-between"><span>PIS:</span> <span class="font-medium">R$ 800,00</span></div>
+                        <div class="flex justify-between"><span>COFINS:</span> <span class="font-medium">R$ 3.700,00</span></div>
+                        <div class="flex justify-between"><span>ISS:</span> <span class="font-medium">R$ 950,00</span></div>
+                        <hr class="border-gray-600 my-2">
+                        <div class="flex justify-between font-bold text-lg"><span>Total Estimado:</span> <span>R$ 10.250,00</span></div>
+                    </div>
+                </div>
+
+                <!-- Novo Sistema (Simulado) -->
+                 <div>
+                    <h3 class="text-lg font-semibold text-white mb-3 border-b border-gray-700 pb-2">Novo Sistema (Simulado)</h3>
+                     <div class="space-y-2 text-sm">
+                        <div class="flex justify-between"><span>IBS (Imposto s/ Bens e Serviços):</span> <span class="font-medium">R$ 8.900,00</span></div>
+                        <div class="flex justify-between"><span>CBS (Contribuição s/ Bens e Serviços):</span> <span class="font-medium">R$ 2.100,00</span></div>
+                        <div class="flex justify-between"><span>Imposto Seletivo (IS):</span> <span class="font-medium">R$ 0,00</span></div>
+                         <div class="flex justify-between text-gray-400"><span>Alíquota Padrão Estimada:</span> <span class="font-medium">27.5%</span></div>
+                        <hr class="border-gray-600 my-2">
+                        <div class="flex justify-between font-bold text-lg"><span>Total Simulado:</span> <span>R$ 11.000,00</span></div>
+                         <hr class="border-gray-600 my-2">
+                         <div class="flex justify-between text-green-400"><span>Impacto Estimado:</span> <span class="font-medium">+ R$ 750,00 (+7.3%)</span></div>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-6 bg-gray-700 p-4 rounded">
+                 <h4 class="text-md font-semibold text-white mb-2 flex items-center"><i class="fas fa-cogs mr-2"></i> Status Agente IA - Reforma Tributária</h4>
+                 <p class="text-sm text-gray-300">Agente está monitorando legislação e adaptando regras de cálculo. Progresso da adaptação: 65%</p>
+                 <div class="w-full bg-gray-600 rounded-full h-2.5 mt-2">
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2.5 rounded-full" style="width: 65%"></div>
+                </div>
+             </div>
+        </div>
+    </template>
+
+    <template id="configuracoes-template">
+        <div class="bg-gray-800 rounded-lg shadow p-4">
+            <h2 class="text-xl font-semibold text-white mb-4">Configurações</h2>
+             <div class="mb-4 border-b border-gray-700">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-400">
+                    <li class="mr-2">
+                        <a href="#" class="inline-block p-4 text-blue-500 border-b-2 border-blue-500 rounded-t-lg active" aria-current="page">Geral</a>
+                    </li>
+                    <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">Usuários</a>
+                    </li>
+                    <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">e-Malote</a>
+                    </li>
+                     <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">APIs Externas</a>
+                    </li>
+                     <li class="mr-2">
+                        <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-300">Notificações</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Conteúdo da Aba Geral (Exemplo) -->
+            <div id="config-geral-content">
+                <h3 class="text-lg font-semibold text-white mb-3">Configurações Gerais</h3>
+                <div class="space-y-4 max-w-md">
+                    <div>
+                        <label for="company-name" class="block text-sm font-medium text-gray-300 mb-1">Nome da Empresa</label>
+                        <input type="text" id="company-name" value="Ampla Contabilidade" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="theme-select" class="block text-sm font-medium text-gray-300 mb-1">Tema da Interface</label>
+                        <select id="theme-select" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="dark">Escuro</option>
+                            <option value="light">Claro</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="language-select" class="block text-sm font-medium text-gray-300 mb-1">Idioma</label>
+                        <select id="language-select" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="pt-BR">Português (Brasil)</option>
+                            <option value="en-US">Inglês (EUA)</option>
+                        </select>
+                    </div>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-sm">Salvar Configurações</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script>
+        // --- Simulação de Dados e Lógica do Mockup ---
+
+        const appContainer = document.getElementById('app-container');
+        const loginScreen = document.getElementById('login-screen');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const contentArea = document.getElementById('content-area');
+        const pageTitle = document.getElementById('page-title');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sidebar = document.getElementById('sidebar');
+        const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+        const sidebarLogo = document.getElementById('sidebar-logo');
+        const mainContent = document.getElementById('main-content');
+        const header = document.querySelector('header');
+
+        // Templates
+        const templates = {
+            dashboard: document.getElementById('dashboard-template').innerHTML,
+            clientes: document.getElementById('clientes-template').innerHTML,
+            documentos: document.getElementById('documentos-template').innerHTML,
+            obrigacoes: document.getElementById('obrigacoes-template').innerHTML,
+            'sped-viewer': document.getElementById('sped-viewer-template').innerHTML,
+            'reforma-tributaria': document.getElementById('reforma-tributaria-template').innerHTML,
+            configuracoes: document.getElementById('configuracoes-template').innerHTML
+        };
+
+        // --- Lógica de Login ---
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Simulação simples de login
+            if (email === 'usuario@amplacontabil.com.br' && password === 'senha123') {
+                loginScreen.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                loadContent('dashboard'); // Carrega o dashboard após login
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        // --- Lógica de Navegação ---
+        function setActiveLink(targetId) {
+            navLinks.forEach(link => {
+                link.classList.remove('active', 'bg-gray-700');
+                if (link.getAttribute('href') === `#${targetId}`) {
+                    link.classList.add('active', 'bg-gray-700');
+                }
+            });
+        }
+
+        function loadContent(pageId) {
+            if (templates[pageId]) {
+                contentArea.innerHTML = templates[pageId];
+                pageTitle.textContent = pageId.charAt(0).toUpperCase() + pageId.slice(1).replace('-', ' ');
+                setActiveLink(pageId);
+                // Inicializar gráficos ou lógicas específicas da página
+                if (pageId === 'dashboard') {
+                    initDashboardCharts();
+                } else if (pageId === 'sped-viewer') {
+                    initSpedViewer();
+                }
+            } else {
+                contentArea.innerHTML = `<p class="text-red-500">Erro: Conteúdo para "${pageId}" não encontrado.</p>`;
+                pageTitle.textContent = 'Erro';
+            }
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('href').substring(1);
+                loadContent(pageId);
+            });
+        });
+
+        // Carregar conteúdo inicial (se já logado, senão é feito no login)
+        // loadContent('dashboard');
+
+         // --- Lógica do Sidebar ---
+        toggleSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('expanded');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('ml-64'); // Expanded width
+            mainContent.classList.toggle('ml-16'); // Collapsed width
+            header.classList.toggle('left-64'); // Expanded width
+            header.classList.toggle('left-16'); // Collapsed width
+
+            const sidebarTexts = sidebar.querySelectorAll('.sidebar-text');
+            if (sidebar.classList.contains('collapsed')) {
+                sidebarLogo.textContent = 'AC'; // Sigla
+                sidebarTexts.forEach(text => text.classList.add('hidden'));
+                toggleSidebarBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            } else {
+                sidebarLogo.textContent = 'ERP Contta';
+                sidebarTexts.forEach(text => text.classList.remove('hidden'));
+                 toggleSidebarBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            }
+        });
+
+        // Inicializar sidebar colapsado (opcional)
+        // sidebar.classList.remove('expanded');
+        // sidebar.classList.add('collapsed');
+        // mainContent.classList.remove('ml-64');
+        // mainContent.classList.add('ml-16');
+        // header.classList.remove('left-64');
+        // header.classList.add('left-16');
+        // sidebarLogo.textContent = 'AC';
+        // sidebar.querySelectorAll('.sidebar-text').forEach(text => text.classList.add('hidden'));
+        // toggleSidebarBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+
+
+        // --- Lógica dos Gráficos do Dashboard ---
+        function initDashboardCharts() {
+            // Gráfico de Obrigações
+            const obligationsCtx = document.getElementById('obligationsChart');
+            if (obligationsCtx) {
+                new Chart(obligationsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Entregues', 'Pendentes', 'Em Atraso', 'Em Processamento'],
+                        datasets: [{
+                            label: 'Status das Obrigações',
+                            data: [350, 7, 3, 15], // Dados simulados
+                            backgroundColor: [
+                                'rgba(16, 185, 129, 0.7)', // green-500
+                                'rgba(245, 158, 11, 0.7)', // amber-500
+                                'rgba(239, 68, 68, 0.7)',  // red-500
+                                'rgba(59, 130, 246, 0.7)' // blue-500
+                            ],
+                            borderColor: [
+                                '#10b981',
+                                '#f59e0b',
+                                '#ef4444',
+                                '#3b82f6'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#d1d5db' // text-gray-300
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Gráfico Mapa Neural (ApexCharts - Exemplo)
+            const neuralMapCtx = document.getElementById('neuralMapChart');
+            if (neuralMapCtx) {
+                 var options = {
+                    series: [{
+                        name: 'Agente Coleta',
+                        data: [ [10, 30], [20, 40], [35, 25] ]
+                    }, {
+                        name: 'Agente ICMS',
+                        data: [ [50, 50], [60, 60] ]
+                    }, {
+                        name: 'Agente SPED',
+                        data: [ [70, 35], [80, 45] ]
+                    }, {
+                        name: 'Hub Central',
+                        data: [ [45, 45] ]
+                    }],
+                    chart: {
+                        height: 280,
+                        type: 'scatter',
+                        zoom: {
+                            enabled: false,
+                        },
+                        toolbar: { show: false },
+                         background: 'transparent'
+                    },
+                    xaxis: {
+                        tickAmount: 5,
+                        labels: { show: false },
+                        axisBorder: { show: false },
+                        axisTicks: { show: false }
+                    },
+                    yaxis: {
+                        tickAmount: 5,
+                         labels: { show: false }
+                    },
+                    markers: {
+                        size: 15,
+                        hover: { sizeOffset: 3 }
+                    },
+                    legend: {
+                        position: 'top',
+                        horizontalAlign: 'left',
+                        labels: { colors: ['#d1d5db'] }
+                    },
+                    tooltip: {
+                        theme: 'dark',
+                        custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                            const nodeName = w.globals.seriesNames[seriesIndex];
+                            // Simular atividade
+                            let activity = 'Ocioso';
+                            if (nodeName === 'Agente Coleta' && Math.random() > 0.5) activity = 'Processando NFe...';
+                            if (nodeName === 'Agente SPED' && Math.random() > 0.3) activity = 'Gerando Bloco C...';
+                            return '<div class="p-2">' +
+                                '<span><b>' + nodeName + '</b></span>' + '<br/>' +
+                                '<span>Atividade: ' + activity + '</span>' +
+                                '</div>'
+                        }
+                    },
+                    grid: {
+                        borderColor: '#374151' // gray-700
+                    }
+                };
+
+                var chart = new ApexCharts(neuralMapCtx, options);
+                chart.render();
+            }
+        }
+
+        // --- Lógica do SPED Viewer ---
+        function initSpedViewer() {
+            const fileSelect = document.getElementById('sped-file-select');
+            const contentArea = document.getElementById('sped-content-area');
+            const recordTree = document.getElementById('sped-record-tree');
+            const recordDetails = document.getElementById('sped-record-details');
+            const selectedRecordName = document.getElementById('selected-record-name');
+
+            fileSelect.addEventListener('change', (e) => {
+                const selectedFile = e.target.value;
+                if (selectedFile && selectedFile !== 'Selecione...') {
+                    contentArea.classList.remove('hidden');
+                    renderSpedTree(selectedFile); // Simula o carregamento da árvore
+                    recordDetails.innerHTML = '<p>Selecione um registro na árvore para ver os detalhes.</p>';
+                    selectedRecordName.textContent = 'Nenhum';
+                } else {
+                    contentArea.classList.add('hidden');
+                }
+            });
+
+            function renderSpedTree(fileName) {
+                // Simulação de estrutura SPED
+                let treeHtml = '<ul>';
+                treeHtml += '<li><span class="sped-record" data-record="0000">Bloco 0 - Abertura</span><ul>';
+                treeHtml += '<li><span class="sped-record" data-record="0001">0001 - Abertura do Bloco 0</span></li>';
+                treeHtml += '<li><span class="sped-record" data-record="0100">0100 - Dados do Contabilista</span></li>';
+                treeHtml += '<li><span class="sped-record" data-record="0150">0150 - Tabela de Cadastro do Participante</span></li>';
+                treeHtml += '</ul></li>';
+                treeHtml += '<li><span class="sped-record" data-record="C000">Bloco C - Documentos Fiscais I</span><ul>';
+                treeHtml += '<li><span class="sped-record" data-record="C100">C100 - NF-e e NF-e Consumidor</span></li>';
+                treeHtml += '<li><span class="sped-record" data-record="C170">C170 - Itens dos Documentos</span></li>';
+                treeHtml += '<li><span class="sped-record" data-record="C190">C190 - Registro Analítico</span></li>';
+                treeHtml += '</ul></li>';
+                 treeHtml += '<li><span class="sped-record" data-record="E000">Bloco E - Apuração ICMS/IPI</span><ul>';
+                treeHtml += '<li><span class="sped-record" data-record="E100">E100 - Período de Apuração ICMS</span></li>';
+                treeHtml += '<li><span class="sped-record" data-record="E110">E110 - Apuração ICMS</span></li>';
+                treeHtml += '<li><span class="sped-record" data-record="E116">E116 - Obrigações do ICMS a Recolher</span></li>';
+                treeHtml += '</ul></li>';
+                treeHtml += '<li><span class="sped-record" data-record="9000">Bloco 9 - Controle e Encerramento</span><ul>';
+                treeHtml += '<li><span class="sped-record" data-record="9900">9900 - Registros do Arquivo</span></li>';
+                treeHtml += '</ul></li>';
+                treeHtml += '</ul>';
+                recordTree.innerHTML = treeHtml;
+
+                // Adicionar listeners aos registros
+                const records = recordTree.querySelectorAll('.sped-record');
+                records.forEach(record => {
+                    record.addEventListener('click', (e) => {
+                        // Remover seleção anterior
+                        records.forEach(r => r.classList.remove('selected'));
+                        // Adicionar seleção atual
+                        e.target.classList.add('selected');
+                        const recordId = e.target.getAttribute('data-record');
+                        selectedRecordName.textContent = recordId;
+                        renderRecordDetails(recordId); // Simula o carregamento dos detalhes
+                    });
+                });
+            }
+
+            function renderRecordDetails(recordId) {
+                // Simulação de dados do registro
+                let detailsHtml = '<table class="w-full sped-data-table"><thead><tr><th>Campo</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>';
+                switch (recordId) {
+                    case '0000':
+                        detailsHtml += '<tr><td>REG</td><td>Registro</td><td>0000</td></tr>';
+                        detailsHtml += '<tr><td>COD_VER</td><td>Código da Versão</td><td>018</td></tr>';
+                        detailsHtml += '<tr><td>DT_INI</td><td>Data Inicial</td><td>01/05/2025</td></tr>';
+                        detailsHtml += '<tr><td>DT_FIN</td><td>Data Final</td><td>31/05/2025</td></tr>';
+                        detailsHtml += '<tr><td>NOME</td><td>Nome Empresarial</td><td>Empresa A Ltda</td></tr>';
+                        break;
+                    case 'C100':
+                        detailsHtml += '<tr><td>REG</td><td>Registro</td><td>C100</td></tr>';
+                        detailsHtml += '<tr><td>IND_OPER</td><td>Indicador Operação</td><td>0 (Entrada)</td></tr>';
+                        detailsHtml += '<tr><td>COD_MOD</td><td>Código Modelo Doc</td><td>55 (NFe)</td></tr>';
+                        detailsHtml += '<tr><td>CHV_NFE</td><td>Chave NFe</td><td>3525...5678</td></tr>';
+                        detailsHtml += '<tr><td>VL_DOC</td><td>Valor Documento</td><td>1250,00</td></tr>';
+                        break;
+                     case 'E110':
+                        detailsHtml += '<tr><td>REG</td><td>Registro</td><td>E110</td></tr>';
+                        detailsHtml += '<tr><td>VL_TOT_DEBITOS</td><td>Total Débitos</td><td>15800,00</td></tr>';
+                        detailsHtml += '<tr><td>VL_AJ_DEBITOS</td><td>Ajustes Débitos</td><td>0,00</td></tr>';
+                        detailsHtml += '<tr><td>VL_TOT_CREDITOS</td><td>Total Créditos</td><td>12200,00</td></tr>';
+                        detailsHtml += '<tr><td>VL_AJ_CREDITOS</td><td>Ajustes Créditos</td><td>0,00</td></tr>';
+                        detailsHtml += '<tr><td>VL_SLD_DEV</td><td>Saldo Devedor</td><td>3600,00</td></tr>';
+                        break;
+                    default:
+                        detailsHtml = `<p>Dados simulados para o registro ${recordId}.</p>`;
+                }
+                detailsHtml += '</tbody></table>';
+                recordDetails.innerHTML = detailsHtml;
+            }
+        }
+
+        // --- Simulação de Atividade IA (Exemplo simples) ---
+        setInterval(() => {
+            const agentStatuses = document.querySelectorAll('.processing-pulse p');
+            agentStatuses.forEach(p => {
+                if (Math.random() > 0.8) {
+                    const statusOptions = [
+                        'Analisando XML...', 'Validando schema...', 'Extraindo dados...', 'Calculando impostos...',
+                        'Gerando Bloco C...', 'Gerando Bloco E...', 'Verificando créditos...'
+                    ];
+                    p.innerHTML = `<span class="status-dot status-blue"></span> ${statusOptions[Math.floor(Math.random() * statusOptions.length)]}`;
+                } else if (Math.random() > 0.95) {
+                     p.innerHTML = `<span class="status-dot status-green"></span> Ocioso`;
+                     p.closest('.processing-pulse')?.classList.remove('processing-pulse');
+                }
+            });
+
+             const nonPulseAgents = document.querySelectorAll('.border:not(.processing-pulse) p');
+             nonPulseAgents.forEach(p => {
+                 if (Math.random() > 0.9) {
+                     p.innerHTML = `<span class="status-dot status-blue"></span> Iniciando processamento...`;
+                     p.closest('.border')?.classList.add('processing-pulse');
+                 }
+             });
+
+        }, 3000); // Atualiza a cada 3 segundos
+
+    </script>
+</body>
+</html>
+

@@ -67,6 +67,96 @@ sistema-tributario/
 - ✅ **Testes**: 100% passando
 - ✅ **Monitoramento**: Ativo
 
+# 🚀 Deploy em Produção
+
+## Pré-requisitos
+- Node.js 20.x
+- Docker e Docker Compose
+- PostgreSQL
+- Redis
+
+## Passos para Deploy
+
+1. **Verificar Requisitos IA**
+```bash
+npm run verify:ia
+```
+
+2. **Executar Testes**
+```bash
+npm run test:ci
+```
+
+3. **Build e Deploy**
+```bash
+npm run deploy:prod
+```
+
+4. **Monitoramento**
+```bash
+npm run monitoring:setup
+```
+
+## Monitoramento
+
+- Prometheus: http://localhost:9090
+- Grafana: http://localhost:3001
+- Health Check: http://localhost:3000/health
+
+## Variáveis de Ambiente
+
+Copie `.env.example` para `.env.production` e configure as variáveis:
+
+```bash
+cp .env.example .env.production
+```
+
+## Backup e Restore
+
+Para fazer backup do banco:
+```bash
+npm run backup:database
+```
+
+## Logs e Monitoramento
+
+Acesse os dashboards em:
+- Grafana: http://localhost:3001
+- Prometheus: http://localhost:9090
+
+## Agentes IA
+
+Todos os 12 agentes IA operam de forma 100% autônoma:
+
+1. Upload & Entrada de Dados
+2. Parsing & Leitura
+3. Apuração ICMS
+4. Apuração Federal
+5. Estoque & CIAP
+6. Precificação
+7. Interface & Reporting
+8. Correção de Testes
+9. Desenvolvimento Frontend
+10. Qualidade de Código
+11. DevOps Automatizado
+12. Coordenador de Desenvolvimento
+
+## Health Checks
+
+Os seguintes endpoints monitoram a saúde do sistema:
+
+- `/health` - Status geral
+- `/agents/status` - Status dos agentes IA
+- `/watchers/status` - Status dos watchers
+
+## Rollback
+
+Em caso de problemas:
+
+```bash
+npm run deploy:rollback
+```
+
 ## 📊 **MÉTRICAS DE SUCESSO**
 
 ### **Performance:**
@@ -203,4 +293,4 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ---
 
-**🚀 Sistema Tributário 100% IA - Revolucionando a Contabilidade Brasileira!** 🌟 
+**🚀 Sistema Tributário 100% IA - Revolucionando a Contabilidade Brasileira!** 🌟

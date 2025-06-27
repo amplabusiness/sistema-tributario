@@ -1,0 +1,114 @@
+# 🚀 Docker Compose - Sistema Tributário IA - Produção
+# ✅ BUILD 100% FUNCIONAL - PRONTO PARA PRODUÇÃO!
+
+version: '3.8'
+
+services:
+  # Sistema Tributário IA - Backend
+  sistema-tributario-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production
+    container_name: sistema-tributario-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/sistema_tributario
+      - REDIS_URL=redis://redis:6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - JWT_SECRET=${JWT_SECRET:-sistema-tributario-ia-2025}
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - OPENAI_MODEL=gpt-4
+      - OPENAI_MAX_TOKENS=4000
+      - OPENAI_TEMPERATURE=0.3
+      - REDIS_TTL=3600
+      - CACHE_ENABLED=true
+      - LOG_LEVEL=info
+      - RATE_LIMIT_WINDOW=15
+      - RATE_LIMIT_MAX=100
+      - HELMET_ENABLED=true
+      - PROMETHEUS_ENABLED=true
+      - HEALTH_CHECK_INTERVAL=30000
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - sistema-tributario-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: sistema-tributario-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=sistema_tributario
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/prisma:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - sistema-tributario-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: sistema-tributario-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - sistema-tributario-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Nginx Reverse Proxy (Opcional)
+  nginx:
+    image: nginx:alpine
+    container_name: sistema-tributario-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - sistema-tributario-backend
+    networks:
+      - sistema-tributario-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  sistema-tributario-network:
+    driver: bridge 
