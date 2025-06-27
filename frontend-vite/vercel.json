@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "sistema-tributario-ia-frontend",
   "builds": [
     {
       "src": "package.json",
@@ -8,16 +7,6 @@
       "config": {
         "distDir": "dist"
       }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
     }
   ],
   "headers": [
@@ -64,11 +53,6 @@
       ]
     }
   ],
-  "functions": {
-    "api/**/*.js": {
-      "maxDuration": 10
-    }
-  },
   "env": {
     "VITE_APP_ENV": "production",
     "VITE_API_URL": "https://api.conttatax.com.br"
